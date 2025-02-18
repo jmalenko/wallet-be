@@ -120,17 +120,17 @@ public class TransactionControllerTest {
 //                .andExpect(jsonPath("$.data[0].key").value(transaction.getData().get(0).getKey()))
 //                .andExpect(jsonPath("$.data[0].value").value(transaction.getData().get(0).getValue()))
 //        ;
-//
-//        // Test: Delete
-//        mockMvc.perform(delete("/transaction/" + id))
-//                .andExpect(status().is2xxSuccessful());
-//
-//        long count3 = getCount();
-//        assertThat(count3).isEqualTo(count1);
-//
-//        // Test: Read (not exiting entity)
-//        mockMvc.perform(get("/transaction/" + id))
-//                .andExpect(status().isNotFound());
+
+        // Test: Delete
+        mockMvc.perform(delete("/transaction/" + id))
+                .andExpect(status().is2xxSuccessful());
+
+        long count3 = getCount();
+        assertThat(count3).isEqualTo(count1);
+
+        // Test: Read (not exiting entity)
+        mockMvc.perform(get("/transaction/" + id))
+                .andExpect(status().isNotFound());
     }
 
     long getCount() throws Exception {
@@ -178,6 +178,12 @@ public class TransactionControllerTest {
                         .content("{\"id\": -1}")
                         .accept(MediaType.APPLICATION_JSON)
                 )
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void deleteWithNonexistentId() throws Exception {
+        mockMvc.perform(delete("/transaction/-1"))
                 .andExpect(status().isNotFound());
     }
 

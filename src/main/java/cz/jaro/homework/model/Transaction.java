@@ -49,6 +49,11 @@ public class Transaction implements Persistable<Long> {
         keyValue.setTransaction(null);
     }
 
+    public void disconnectBidirectionalRelationships() {
+        data.forEach(keyValue -> keyValue.setTransaction(null));
+        data.clear();
+    }
+
     @Override
     public Long getId() {
         return id;

@@ -70,7 +70,12 @@ public class TransactionController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
-        repository.deleteById(id);
+        Transaction transaction = repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Transaction not found in the repository."));
+
+        transaction.disconnectBidirectionalRelationships();
+
+        repository.deleteById_Query(id);
     }
 
 //    @GetMapping("/search/timestamp/{from}/{to}")
