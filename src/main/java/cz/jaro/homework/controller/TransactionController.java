@@ -97,10 +97,10 @@ public class TransactionController {
 //        return repository.findAllByType(type);
 //    }
 //
-//    @GetMapping("/search/data/{key}")
-//    public List<Transaction> filterByKey(@PathVariable String key) {
-//        return repository.findAllByDataKey(key);
-//    }
+@GetMapping("/search/data/{key}")
+public List<Transaction> searchByKey(@PathVariable String key) {
+    return repository.findAllByDataKey(key);
+}
 
 
 }

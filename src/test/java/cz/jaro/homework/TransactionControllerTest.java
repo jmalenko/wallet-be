@@ -187,4 +187,14 @@ public class TransactionControllerTest {
                 .andExpect(status().isNotFound());
     }
 
+    @Test
+    void search() throws Exception {
+        this.mockMvc.perform(get("/transaction/search/data/key0"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$.[0].data[0].key").value("key0"))
+                .andExpect(jsonPath("$.[0].data[0].value").value("value0"));
+    }
+
+
 }
