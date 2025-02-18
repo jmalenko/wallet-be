@@ -1,16 +1,37 @@
 package cz.jaro.homework.model;
 
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import org.springframework.data.relational.core.mapping.Column;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
+import lombok.*;
 
 
-public record KeyValue(
-        @ManyToOne
-        @JoinColumn(name = "transaction_id")
-        Transaction transaction,
-        @Column(value = "key_")
-        String key,
-        String value
-) {
+@Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode
+public class KeyValue {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "transaction_id")
+    @JsonBackReference
+    private Transaction transaction;
+
+    @Column(name = "key_")
+    private String key;
+
+    private String value;
+
+    @Override
+    public String toString() {
+        return "KeyValue{" +
+                "id=" + id +
+                ", key='" + key + '\'' +
+                ", value='" + value + '\'' +
+                '}';
+    }
 }
