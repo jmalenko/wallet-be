@@ -11,7 +11,6 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,16 +41,12 @@ public class TransactionController {
     @ResponseStatus(HttpStatus.CREATED)
     public Transaction create(@Valid @RequestBody Transaction transaction) {
         try {
-            List<KeyValue> dataIn = new ArrayList<>();
-            Transaction transactionIn = new Transaction(transaction.getId(), transaction.getTimestamp(), transaction.getType(), transaction.getActor(), dataIn);
-
+            // Synchronize bidirectional relations
             for (KeyValue keyValue : transaction.getData()) {
-                KeyValue keyValueIn = new KeyValue(null, null, keyValue.getKey(), keyValue.getValue());
-                transactionIn.addData(keyValueIn);
+                keyValue.setTransaction(transaction);
             }
 
-            Transaction transactionOut = repository.save(transactionIn);
-            return transactionOut;
+            return repository.save(transaction);
         } catch (DataIntegrityViolationException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "A transaction with this id already exists.");
         } catch (HttpMessageNotReadableException e) {
@@ -64,7 +59,17 @@ public class TransactionController {
     public Transaction update(@Valid @RequestBody Transaction transaction) {
         Transaction existingTransaction = repository.findById(transaction.getId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Transaction not found in the repository."));
-        return repository.save(transaction);
+
+        existingTransaction.disconnectBidirectionalRelationships();
+
+        existingTransaction.setTimestamp(transaction.getTimestamp());
+        existingTransaction.setType(transaction.getType());
+        existingTransaction.setActor(transaction.getActor());
+        for (KeyValue keyValue : transaction.getData()) {
+            existingTransaction.addData(keyValue);
+        }
+
+        return repository.save(existingTransaction);
     }
 
     @DeleteMapping("/{id}")

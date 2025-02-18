@@ -98,28 +98,28 @@ public class TransactionControllerTest {
                 .andExpect(jsonPath("$.data[0].value").value(transaction.getData().get(0).getValue()))
         ;
 
-//        // Test: Update
-//        transaction.setActor(transaction.getActor() + "updated");
-//        mockMvc.perform(put("/transaction")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(objectMapper.writeValueAsString(transaction))
-//                        .accept(MediaType.APPLICATION_JSON)
-//                )
-//                .andExpect(status().isAccepted())
-//                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(jsonPath("$.id").value(id))
-//                .andExpect(jsonPath("$.actor").value(transaction.getActor()));
-//
-//        // Test: Read
-//        mockMvc.perform(get("/transaction/" + id))
-//                .andExpect(status().is2xxSuccessful())
-//                .andExpect(jsonPath("$.id").value(transaction.getId()))
-//                .andExpect(jsonPath("$.timestamp").value(transaction.getTimestamp()))
-//                .andExpect(jsonPath("$.type").value(transaction.getType()))
-//                .andExpect(jsonPath("$.actor").value(transaction.getActor()))
-//                .andExpect(jsonPath("$.data[0].key").value(transaction.getData().get(0).getKey()))
-//                .andExpect(jsonPath("$.data[0].value").value(transaction.getData().get(0).getValue()))
-//        ;
+        // Test: Update
+        transaction.setActor(transaction.getActor() + "updated");
+        mockMvc.perform(put("/transaction")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(transaction))
+                        .accept(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isAccepted())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id").value(id))
+                .andExpect(jsonPath("$.actor").value(transaction.getActor()));
+
+        // Test: Read
+        mockMvc.perform(get("/transaction/" + id))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$.id").value(transaction.getId()))
+                .andExpect(jsonPath("$.timestamp").value(transaction.getTimestamp()))
+                .andExpect(jsonPath("$.type").value(transaction.getType()))
+                .andExpect(jsonPath("$.actor").value(transaction.getActor()))
+                .andExpect(jsonPath("$.data[0].key").value(transaction.getData().get(0).getKey()))
+                .andExpect(jsonPath("$.data[0].value").value(transaction.getData().get(0).getValue()))
+        ;
 
         // Test: Delete
         mockMvc.perform(delete("/transaction/" + id))
