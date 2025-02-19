@@ -4,6 +4,8 @@ import cz.jaro.homework.model.KeyValue;
 import cz.jaro.homework.model.Transaction;
 import cz.jaro.homework.repository.TransactionRepository;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -18,6 +20,8 @@ import java.util.Optional;
 @RequestMapping("/transaction")
 public class TransactionController {
 
+    private static final Logger log = LoggerFactory.getLogger(TransactionController.class);
+
     @Autowired
     private TransactionRepository repository;
 
@@ -28,13 +32,13 @@ public class TransactionController {
 
     @GetMapping("/count")
     public Long count() {
+        log.trace("GET count");
         return repository.count();
     }
 
     @GetMapping("/{id}")
     public Optional<Transaction> findById(@PathVariable Long id) {
-        return Optional.ofNullable(repository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Transaction not found.")));
+        return Optional.ofNullable(repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Transaction not found.")));
     }
 
     @PostMapping
@@ -57,8 +61,7 @@ public class TransactionController {
     @PutMapping("")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public Transaction update(@Valid @RequestBody Transaction transaction) {
-        Transaction existingTransaction = repository.findById(transaction.getId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Transaction not found in the repository."));
+        Transaction existingTransaction = repository.findById(transaction.getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Transaction not found in the repository."));
 
         existingTransaction.disconnectBidirectionalRelationships();
 
@@ -75,15 +78,14 @@ public class TransactionController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
-        Transaction transaction = repository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Transaction not found in the repository."));
+        Transaction transaction = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Transaction not found in the repository."));
 
         transaction.disconnectBidirectionalRelationships();
 
         repository.deleteById_Query(id);
     }
 
-//    @GetMapping("/search/timestamp/{from}/{to}")
+    //    @GetMapping("/search/timestamp/{from}/{to}")
 //    public List<Transaction> filterByTimestampRange(@PathVariable String from, @PathVariable String to) {
 //        try {
 //            return repository.findAllByTimestampRange(Long.decode(from), Long.decode(to));
@@ -97,10 +99,10 @@ public class TransactionController {
 //        return repository.findAllByType(type);
 //    }
 //
-@GetMapping("/search/data/{key}")
-public List<Transaction> searchByKey(@PathVariable String key) {
-    return repository.findAllByDataKey(key);
-}
+    @GetMapping("/search/data/{key}")
+    public List<Transaction> searchByKey(@PathVariable String key) {
+        return repository.findAllByDataKey(key);
+    }
 
 
 }
