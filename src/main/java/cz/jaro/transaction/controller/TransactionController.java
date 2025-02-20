@@ -1,8 +1,8 @@
-package cz.jaro.homework.controller;
+package cz.jaro.transaction.controller;
 
-import cz.jaro.homework.model.KeyValue;
-import cz.jaro.homework.model.Transaction;
-import cz.jaro.homework.repository.TransactionRepository;
+import cz.jaro.transaction.model.KeyValue;
+import cz.jaro.transaction.model.Transaction;
+import cz.jaro.transaction.repository.TransactionRepository;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

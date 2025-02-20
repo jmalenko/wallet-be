@@ -1,4 +1,4 @@
-package cz.jaro.homework.model;
+package cz.jaro.transaction.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;

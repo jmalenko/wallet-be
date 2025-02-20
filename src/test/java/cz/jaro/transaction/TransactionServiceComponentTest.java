@@ -1,8 +1,8 @@
-package cz.jaro.homework;
+package cz.jaro.transaction;
 
-import cz.jaro.homework.model.Transaction;
-import cz.jaro.homework.repository.TransactionRepository;
-import cz.jaro.homework.service.TransactionService;
+import cz.jaro.transaction.model.Transaction;
+import cz.jaro.transaction.repository.TransactionRepository;
+import cz.jaro.transaction.service.TransactionService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

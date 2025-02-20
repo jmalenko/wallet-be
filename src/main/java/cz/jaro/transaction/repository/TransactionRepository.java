@@ -1,6 +1,6 @@
-package cz.jaro.homework.repository;
+package cz.jaro.transaction.repository;
 
-import cz.jaro.homework.model.Transaction;
+import cz.jaro.transaction.model.Transaction;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.NativeQuery;

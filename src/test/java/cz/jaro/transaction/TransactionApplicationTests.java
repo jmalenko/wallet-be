@@ -1,10 +1,10 @@
-package cz.jaro.homework;
+package cz.jaro.transaction;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class HomeworkApplicationTests {
+class TransactionApplicationTests {
 
 	@Test
 	void contextLoads() {

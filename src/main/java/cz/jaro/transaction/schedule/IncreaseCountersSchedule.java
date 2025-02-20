@@ -1,6 +1,6 @@
-package cz.jaro.homework.schedule;
+package cz.jaro.transaction.schedule;
 
-import cz.jaro.homework.service.TransactionService;
+import cz.jaro.transaction.service.TransactionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package cz.jaro.homework;
+package cz.jaro.transaction;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -6,10 +6,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableScheduling
-public class HomeworkApplication {
+public class TransactionApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(HomeworkApplication.class, args);
+		SpringApplication.run(TransactionApplication.class, args);
 	}
 
 }
