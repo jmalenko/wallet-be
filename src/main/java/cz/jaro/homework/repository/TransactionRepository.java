@@ -10,14 +10,9 @@ import java.util.List;
 
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
 
-//    List<Transaction> findAllByType(String type);
-//
-//    @Query("SELECT * " +
-//            "FROM transaction t " +
-//            "LEFT JOIN keyvalue kv ON kv.transaction_id = t.id " +
-//            "WHERE :from < timestamp AND timestamp <= :to")
-//    List<Transaction> findAllByTimestampRange(Long from, Long to);
-//    List<Transaction> findAllByTimestampBetween(Long from, Long to);
+    List<Transaction> findAllByType(String type);
+
+    List<Transaction> findAllByTimestampBetween(Long from, Long to);
 
     @Modifying
     @Transactional

@@ -1,9 +1,13 @@
 package cz.jaro.homework;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import cz.jaro.homework.controller.TransactionController;
 import cz.jaro.homework.model.KeyValue;
 import cz.jaro.homework.model.Transaction;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -21,6 +26,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 public class TransactionControllerTest {
+
+    private static final Logger log = LoggerFactory.getLogger(TransactionController.class);
 
     @Autowired
     private MockMvc mockMvc;
@@ -43,7 +50,6 @@ public class TransactionControllerTest {
         String content = result.getResponse().getContentAsString();
         long count = Long.parseLong(content);
         assertThat(count).isNotNegative();
-
     }
 
     @Test
@@ -188,13 +194,126 @@ public class TransactionControllerTest {
     }
 
     @Test
-    void search() throws Exception {
-        this.mockMvc.perform(get("/transaction/search/data/key0"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$.[0].data[0].key").value("key0"))
-                .andExpect(jsonPath("$.[0].data[0].value").value("value0"));
+    void searchTimestampBetween() throws Exception {
+        long id = new Random().nextInt(10000);
+        Transaction transaction = new Transaction(id, 101L, "type", "actor", new ArrayList<>());
+
+        List<Transaction> transactions1 = getResponseAsArray("/transaction/search/timestamp/100/200");
+        long count1 = transactions1.size();
+
+        createTransaction(transaction);
+
+        List<Transaction> transactions2 = getResponseAsArray("/transaction/search/timestamp/100/200");
+        long count2 = transactions2.size();
+
+        assertThat(count2).isEqualTo(count1 + 1);
+
+        transactions2.forEach(t -> {
+            assertThat(t.getTimestamp()).isBetween(100L, 200L);
+        });
+
+        deleteTransaction(id);
     }
 
+    @Test
+    void searchTimestampBetweenNegative() throws Exception {
+        long id = new Random().nextInt(10000);
+        Transaction transaction = new Transaction(id, 201L, "type", "actor", new ArrayList<>());
+
+        List<Transaction> transactions1 = getResponseAsArray("/transaction/search/timestamp/100/200");
+        long count1 = transactions1.size();
+
+        createTransaction(transaction);
+
+        List<Transaction> transactions2 = getResponseAsArray("/transaction/search/timestamp/100/200");
+        long count2 = transactions2.size();
+
+        assertThat(count2).isEqualTo(count1);
+
+        transactions2.forEach(t -> {
+            assertThat(t.getTimestamp()).isBetween(100L, 200L);
+        });
+
+        deleteTransaction(id);
+    }
+
+    @Test
+    void searchType() throws Exception {
+        long id = new Random().nextInt(10000);
+        Transaction transaction = new Transaction(id, 201L, "type", "actor", new ArrayList<>());
+
+        List<Transaction> transactions1 = getResponseAsArray("/transaction/search/type/type");
+        long count1 = transactions1.size();
+
+        createTransaction(transaction);
+
+        List<Transaction> transactions2 = getResponseAsArray("/transaction/search/type/type");
+        long count2 = transactions2.size();
+
+        assertThat(count2).isEqualTo(count1 + 1);
+
+        transactions2.forEach(t -> {
+            assertThat(t.getType()).isEqualTo("type");
+        });
+
+        deleteTransaction(id);
+    }
+
+    @Test
+    void searchDataKey() throws Exception {
+        long id = new Random().nextInt(10000);
+        Transaction transaction = new Transaction(id, System.currentTimeMillis(), "type", "actor", new ArrayList<>());
+        transaction.addData(new KeyValue(null, null, "key", "value"));
+
+        List<Transaction> transactions1 = getResponseAsArray("/transaction/search/data/key");
+        long count1 = transactions1.size();
+
+        createTransaction(transaction);
+
+        List<Transaction> transactions2 = getResponseAsArray("/transaction/search/data/key");
+        long count2 = transactions2.size();
+
+        assertThat(count2).isEqualTo(count1 + 1);
+
+        transactions2.forEach(t -> {
+            long count = 0;
+            for (KeyValue keyValue : t.getData()) {
+                if (keyValue.getKey().equals("key"))
+                    count++;
+            }
+            assertThat(count).isEqualTo(1);
+        });
+
+        deleteTransaction(id);
+    }
+
+    private List<Transaction> getResponseAsArray(String path) throws Exception {
+        MvcResult result = mockMvc.perform(get(path))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andReturn();
+        String content = result.getResponse().getContentAsString();
+        List<Transaction> transactions = objectMapper.readValue(content, new TypeReference<List<Transaction>>() {
+        });
+        return transactions;
+    }
+
+    private void createTransaction(Transaction transaction) throws Exception {
+        log.trace("Creating transaction with id " + transaction.getId());
+
+        mockMvc.perform(post("/transaction")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(transaction))
+                        .accept(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isCreated());
+    }
+
+    private void deleteTransaction(long id) throws Exception {
+        log.trace("Deleting transaction with id " + id);
+
+        mockMvc.perform(delete("/transaction/" + id))
+                .andExpect(status().is2xxSuccessful());
+    }
 
 }

@@ -85,20 +85,20 @@ public class TransactionController {
         repository.deleteById_Query(id);
     }
 
-    //    @GetMapping("/search/timestamp/{from}/{to}")
-//    public List<Transaction> filterByTimestampRange(@PathVariable String from, @PathVariable String to) {
-//        try {
-//            return repository.findAllByTimestampRange(Long.decode(from), Long.decode(to));
-//        } catch (NumberFormatException e) {
-//            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Range limit is not a number.");
-//        }
-//    }
-//
-//    @GetMapping("/search/type/{type}")
-//    public List<Transaction> filterByType(@PathVariable String type) {
-//        return repository.findAllByType(type);
-//    }
-//
+    @GetMapping("/search/timestamp/{from}/{to}")
+    public List<Transaction> filterByTimestampRange(@PathVariable String from, @PathVariable String to) {
+        try {
+            return repository.findAllByTimestampBetween(Long.decode(from), Long.decode(to));
+        } catch (NumberFormatException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Range limit is not a number.");
+        }
+    }
+
+    @GetMapping("/search/type/{type}")
+    public List<Transaction> filterByType(@PathVariable String type) {
+        return repository.findAllByType(type);
+    }
+
     @GetMapping("/search/data/{key}")
     public List<Transaction> searchByKey(@PathVariable String key) {
         return repository.findAllByDataKey(key);
