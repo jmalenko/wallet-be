@@ -37,7 +37,7 @@ public class TransactionControllerTest {
 
     @Test
     void all() throws Exception {
-        this.mockMvc.perform(get("/transaction/all"))
+        mockMvc.perform(get("/transaction/all"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray());
     }
@@ -208,9 +208,9 @@ public class TransactionControllerTest {
 
         assertThat(count2).isEqualTo(count1 + 1);
 
-        transactions2.forEach(t -> {
-            assertThat(t.getTimestamp()).isBetween(100L, 200L);
-        });
+        transactions2.forEach(t ->
+                assertThat(t.getTimestamp()).isBetween(100L, 200L)
+        );
 
         deleteTransaction(id);
     }
@@ -230,9 +230,9 @@ public class TransactionControllerTest {
 
         assertThat(count2).isEqualTo(count1);
 
-        transactions2.forEach(t -> {
-            assertThat(t.getTimestamp()).isBetween(100L, 200L);
-        });
+        transactions2.forEach(t ->
+                assertThat(t.getTimestamp()).isBetween(100L, 200L)
+        );
 
         deleteTransaction(id);
     }
@@ -252,9 +252,9 @@ public class TransactionControllerTest {
 
         assertThat(count2).isEqualTo(count1 + 1);
 
-        transactions2.forEach(t -> {
-            assertThat(t.getType()).isEqualTo("type");
-        });
+        transactions2.forEach(t ->
+                assertThat(t.getType()).isEqualTo("type")
+        );
 
         deleteTransaction(id);
     }
@@ -293,9 +293,8 @@ public class TransactionControllerTest {
                 .andExpect(jsonPath("$").isArray())
                 .andReturn();
         String content = result.getResponse().getContentAsString();
-        List<Transaction> transactions = objectMapper.readValue(content, new TypeReference<List<Transaction>>() {
+        return objectMapper.readValue(content, new TypeReference<>() {
         });
-        return transactions;
     }
 
     private void createTransaction(Transaction transaction) throws Exception {

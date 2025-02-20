@@ -19,7 +19,7 @@ public class TransactionServiceUnitTest {
     TransactionService transactionService;
 
     @Test
-    void increaseCounter() throws Exception {
+    void increaseCounter() {
         long id = new Random().nextInt(10000);
         Transaction transaction = new Transaction(id, 101L, "counter", "actor1", new ArrayList<>());
 
@@ -43,7 +43,7 @@ public class TransactionServiceUnitTest {
     }
 
     @Test
-    void increaseCounterNotANumber() throws Exception {
+    void increaseCounterNotANumber() {
         long id = new Random().nextInt(10000);
         Transaction transaction = new Transaction(id, 101L, "counter", "actor1", new ArrayList<>());
         transaction.addData(new KeyValue(null, null, "counter", "X"));
