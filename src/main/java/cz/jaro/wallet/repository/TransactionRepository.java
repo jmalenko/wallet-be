@@ -1,6 +1,6 @@
-package cz.jaro.transaction.repository;
+package cz.jaro.wallet.repository;
 
-import cz.jaro.transaction.model.Transaction;
+import cz.jaro.wallet.model.Transaction;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.NativeQuery;

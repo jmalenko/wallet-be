@@ -1,8 +1,8 @@
-package cz.jaro.transaction.controller;
+package cz.jaro.wallet.controller;
 
-import cz.jaro.transaction.model.KeyValue;
-import cz.jaro.transaction.model.Transaction;
-import cz.jaro.transaction.repository.TransactionRepository;
+import cz.jaro.wallet.model.KeyValue;
+import cz.jaro.wallet.model.Transaction;
+import cz.jaro.wallet.repository.TransactionRepository;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

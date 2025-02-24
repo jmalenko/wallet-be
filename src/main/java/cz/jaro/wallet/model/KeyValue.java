@@ -1,4 +1,4 @@
-package cz.jaro.transaction.model;
+package cz.jaro.wallet.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;

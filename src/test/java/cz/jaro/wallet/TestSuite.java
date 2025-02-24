@@ -1,4 +1,4 @@
-package cz.jaro.transaction;
+package cz.jaro.wallet;
 
 import org.junit.platform.suite.api.SelectPackages;
 import org.junit.platform.suite.api.Suite;

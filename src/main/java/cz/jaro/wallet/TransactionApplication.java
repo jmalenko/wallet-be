@@ -1,4 +1,4 @@
-package cz.jaro.transaction;
+package cz.jaro.wallet;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

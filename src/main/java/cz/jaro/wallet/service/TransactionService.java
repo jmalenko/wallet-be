@@ -1,8 +1,8 @@
-package cz.jaro.transaction.service;
+package cz.jaro.wallet.service;
 
-import cz.jaro.transaction.model.KeyValue;
-import cz.jaro.transaction.model.Transaction;
-import cz.jaro.transaction.repository.TransactionRepository;
+import cz.jaro.wallet.model.KeyValue;
+import cz.jaro.wallet.model.Transaction;
+import cz.jaro.wallet.repository.TransactionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

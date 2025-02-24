@@ -1,10 +1,10 @@
-package cz.jaro.transaction;
+package cz.jaro.wallet;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import cz.jaro.transaction.controller.TransactionController;
-import cz.jaro.transaction.model.KeyValue;
-import cz.jaro.transaction.model.Transaction;
+import cz.jaro.wallet.controller.TransactionController;
+import cz.jaro.wallet.model.KeyValue;
+import cz.jaro.wallet.model.Transaction;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>cz.jaro</groupId>
-    <artifactId>transaction</artifactId>
+    <artifactId>wallet</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>transaction</name>
-    <description>Transaction project</description>
+    <name>wallet</name>
+    <description>Wallet</description>
     <url/>
     <licenses>
         <license/>

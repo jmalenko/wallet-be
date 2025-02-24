@@ -1,8 +1,8 @@
-package cz.jaro.transaction;
+package cz.jaro.wallet;
 
-import cz.jaro.transaction.model.KeyValue;
-import cz.jaro.transaction.model.Transaction;
-import cz.jaro.transaction.service.TransactionService;
+import cz.jaro.wallet.model.KeyValue;
+import cz.jaro.wallet.model.Transaction;
+import cz.jaro.wallet.service.TransactionService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
