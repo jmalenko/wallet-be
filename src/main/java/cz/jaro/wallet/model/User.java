@@ -1,13 +1,14 @@
 package cz.jaro.wallet.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name = "user_")
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,7 +16,7 @@ import java.util.List;
 @Setter
 @EqualsAndHashCode
 @ToString
-public class User {
+public class User implements Serializable {
 
     @Id
     @GeneratedValue
@@ -27,7 +28,6 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @JsonManagedReference
     private List<Account> accounts = new ArrayList<>();
 
     public void addAccount(Account account) {

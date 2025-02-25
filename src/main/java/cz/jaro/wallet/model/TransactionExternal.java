@@ -4,6 +4,7 @@ import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import lombok.*;
 
+import java.io.Serializable;
 import java.util.Date;
 
 
@@ -16,7 +17,7 @@ import java.util.Date;
 @Setter
 @EqualsAndHashCode
 @ToString
-public class TransactionExternal extends Transaction {
+public class TransactionExternal extends Transaction implements Serializable {
 
     private String counterpartyAccount;
 

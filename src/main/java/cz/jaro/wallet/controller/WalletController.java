@@ -2,6 +2,7 @@ package cz.jaro.wallet.controller;
 
 import cz.jaro.wallet.model.*;
 import cz.jaro.wallet.repository.AccountRepository;
+import cz.jaro.wallet.repository.TransactionRepository;
 import cz.jaro.wallet.repository.UserRepository;
 import cz.jaro.wallet.service.WalletService;
 import org.slf4j.Logger;
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
-@RequestMapping("/transaction")
+@RequestMapping("/wallet")
 public class WalletController {
 
     private static final Logger log = LoggerFactory.getLogger(WalletController.class);
@@ -28,6 +29,9 @@ public class WalletController {
 
     @Autowired
     private AccountRepository accountRepository;
+
+    @Autowired
+    private TransactionRepository transactionRepository;
 
     @GetMapping("/createUser")
     @ResponseStatus(HttpStatus.CREATED)
@@ -101,7 +105,9 @@ public class WalletController {
             // FUTURE Check that the account belongs to the (authorized) user
 
             Account account = accountRepository.findById(accountId).get();
-            return account.getTransactions();
+            List<Transaction> transactions = account.getTransactions();
+            transactions.sort(WalletService.Comparators.CREATED);
+            return transactions;
         } catch (NoSuchElementException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account does not exist.", e);
         }
@@ -116,6 +122,14 @@ public class WalletController {
         } catch (NoSuchElementException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account does not exist.", e);
         }
+    }
+
+    // Debug
+
+    @GetMapping("/getUsers")
+    @ResponseStatus(HttpStatus.CREATED)
+    public List<User> allUsers() {
+        return userRepository.findAll();
     }
 
 }

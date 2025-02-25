@@ -10,10 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Service
 public class WalletService {
@@ -37,10 +34,10 @@ public class WalletService {
         User user = new User(null, "Name" + randomName, accounts);
 
         Account accountCZK = new Account(null, "CZK", user, new ArrayList<>());
-        Account accountEUR = new Account(null, "CZK", user, new ArrayList<>());
+        Account accountEUR = new Account(null, "EUR", user, new ArrayList<>());
 
-        accounts.add(accountCZK);
-        accounts.add(accountEUR);
+        user.addAccount(accountCZK);
+        user.addAccount(accountEUR);
 
         return userRepository.save(user);
     }
@@ -48,10 +45,20 @@ public class WalletService {
     @Transactional
     public Transaction receiveExternal(Account account) {
         String counterpartyAccountId = "123456";
-        String counterpartyReference = "First deposit";
+        String counterpartyReference = "External deposit";
         Amount counterpartyAmount = new Amount(Long.valueOf(100 + new Random().nextInt(900)), 0L); // same currency
 
         TransactionExternal transaction = new TransactionExternal(null, account, counterpartyAmount, counterpartyReference, new Date(), counterpartyAccountId);
+        account.addTransaction(transaction);
+
+        return transactionRepository.save(transaction);
+    }
+
+    // For initial sample data load
+    @Transactional
+    public Transaction receiveExternal(Account account, Amount amount, String reference, Date created, String counterpartyAccountId) {
+        TransactionExternal transaction = new TransactionExternal(null, account, amount, reference, created, counterpartyAccountId);
+        account.addTransaction(transaction);
 
         return transactionRepository.save(transaction);
     }
@@ -70,6 +77,7 @@ public class WalletService {
         Amount amountWithSign = new Amount(-amount.getWhole(), amount.getDecimal());
 
         TransactionExternal transaction = new TransactionExternal(null, account, amountWithSign, reference, new Date(), counterpartyAccountId);
+        account.addTransaction(transaction);
 
         return transactionRepository.save(transaction);
     }
@@ -82,13 +90,18 @@ public class WalletService {
         if (!amountIsLessThanOrEqual(amount, getAccountBalance(account)))
             throw new Exception("Account balance is lower than the transaction amount.");
 
-        Amount amountWithSign = new Amount(-amount.getWhole(), amount.getDecimal());
+        if (!account.getCurrency().equals(counterpartyAccount.getCurrency()))
+            throw new Exception("Account and counterparty account have different currencies.");
+
+        Amount amountNegative = amountNegate(amount);
         Date created = new Date();
 
-        TransactionInternal transactionOutgoing = new TransactionInternal(null, account, amountWithSign, reference, created, counterpartyAccount);
+        TransactionInternal transactionOutgoing = new TransactionInternal(null, account, amountNegative, reference, created, counterpartyAccount);
+        account.addTransaction(transactionOutgoing);
         TransactionInternal transactionOutgoingSaved = transactionRepository.save(transactionOutgoing);
 
         TransactionInternal transactionIncoming = new TransactionInternal(null, counterpartyAccount, amount, reference, created, account);
+        counterpartyAccount.addTransaction(transactionIncoming);
         TransactionInternal transactionIncomingSaved = transactionRepository.save(transactionIncoming);
 
         return transactionOutgoingSaved;
@@ -97,7 +110,9 @@ public class WalletService {
     public List<DateBalance> getDailyBalances(Account account) {
         List<DateBalance> dailyBalances = new ArrayList<DateBalance>();
 
-        List<Transaction> transactions = transactionRepository.findAllByAccountId(account.getId());
+        List<Transaction> transactions = account.getTransactions();
+        transactions.sort(Comparators.CREATED);
+
         Date date = null;
         Amount amount = null;
 
@@ -209,6 +224,10 @@ public class WalletService {
         return d1.getYear() == d2.getYear() &&
                 d1.getMonth() == d2.getMonth() &&
                 d1.getDay() == d2.getDay();
+    }
+
+    public static class Comparators {
+        public static final Comparator<Transaction> CREATED = (Transaction t1, Transaction t2) -> t1.compareTo(t2);
     }
 
 }

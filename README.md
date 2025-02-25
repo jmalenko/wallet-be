@@ -50,15 +50,42 @@ Run WalletControllerTest.
 
 ## Technical notes
 
+### Database
+
+Start database in docker.
+
 ```
+sudo mkdir -p /private/var/lib/postgresql
+sudo  chown -R jaro:jaro /private
+
 docker compose -f docker/docker-compose.yml -p docker_wallet up -d db
 ```
 
-### Package
+In the dev profile (which is active), database structure is updated automatically based on the model.
+
+The following may be useful for deploying to production (prod profile).
+
+```
+sudo apt install postgresql-client
+
+PGPASSWORD=password psql -h 127.0.0.1 -p 5432 -U postgres -d postgres
+```
+
+### Needed OS Packages
+
+You may need to:
+
+```
+apt-get install libtcnative
+
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/x86_64-linux-gnu
+```
+
+### Package and Run
 
 ```
 ./mvnw clean package
-java -jar target/...
+java -jar target/wallet-0.0.1-SNAPSHOT.jar
 ```
 
 ## Improvements
