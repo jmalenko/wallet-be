@@ -4,6 +4,8 @@ import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import lombok.*;
 
+import java.util.Date;
+
 
 @Entity
 @DiscriminatorValue("EXTERNAL")
@@ -17,5 +19,10 @@ import lombok.*;
 public class TransactionExternal extends Transaction {
 
     private String counterpartyAccount;
+
+    public TransactionExternal(Long id, Account account, Amount amount, String reference, Date created, String counterpartyAccount) {
+        super(id, account, amount, reference, created);
+        this.counterpartyAccount = counterpartyAccount;
+    }
 
 }

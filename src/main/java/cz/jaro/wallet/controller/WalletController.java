@@ -1,17 +1,18 @@
 package cz.jaro.wallet.controller;
 
 import cz.jaro.wallet.model.*;
+import cz.jaro.wallet.repository.AccountRepository;
+import cz.jaro.wallet.repository.UserRepository;
 import cz.jaro.wallet.service.WalletService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/transaction")
@@ -22,45 +23,99 @@ public class WalletController {
     @Autowired
     private WalletService service;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private AccountRepository accountRepository;
+
     @GetMapping("/createUser")
     @ResponseStatus(HttpStatus.CREATED)
     public User createUser() {
         return service.createUser();
     }
 
-    @GetMapping("/receiveExternal")
-    @ResponseStatus(HttpStatus.OK)
-    public Transaction receiveExternal(Account account) {
-        return service.receiveExternal(account);
+    private static Amount pairToAmount(String amountWhole, String amountDecimal) {
+        return new Amount(Long.valueOf(amountWhole), Long.valueOf(amountDecimal));
     }
 
-    @GetMapping("/sendExternal")
+    @GetMapping("/receiveExternal/{accountId}")
     @ResponseStatus(HttpStatus.OK)
-    public Transaction sendExternal(Account account, String iban, Amount amount, String reference) {
-        return service.sendExternal(account, iban, amount, reference);
+    public Transaction receiveExternal(@PathVariable Long accountId) {
+        try {
+            Account account = accountRepository.findById(accountId).get();
+            return service.receiveExternal(account);
+        } catch (NoSuchElementException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account does not exist.", e);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Cannot process transaction.", e);
+        }
     }
 
-    @GetMapping("/sendInternal")
+    @GetMapping("/sendExternal/{accountId}/{counterpartyAccountId}/{amountWhole}/{amountDecimal}/{reference}")
     @ResponseStatus(HttpStatus.OK)
-    public Transaction sendInternal(Account accountFrom, Account accountTo, Amount amount, String reference) {
-        return service.sendInternal(accountFrom, accountTo, amount, reference);
+    public Transaction sendExternal(@PathVariable Long accountId, @PathVariable String counterpartyAccountId, @PathVariable String amountWhole, @PathVariable String amountDecimal, @PathVariable String reference) {
+        try {
+            Account account = accountRepository.findById(accountId).get();
+            Amount amount = pairToAmount(amountWhole, amountDecimal);
+            return service.sendExternal(account, amount, reference, counterpartyAccountId);
+        } catch (NoSuchElementException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account does not exist.", e);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Cannot process transaction.", e);
+        }
     }
 
-    @GetMapping("/getAccounts")
+    @GetMapping("/sendInternal/{accountId}/{counterpartyAccountId}/{amountWhole}/{amountDecimal}/{reference}")
     @ResponseStatus(HttpStatus.OK)
-    public List<Account> getAccounts(User user) {
-        return service.getAccounts(user);
+    public Transaction sendInternal(@PathVariable Long accountId, @PathVariable Long counterpartyAccountId, @PathVariable String amountWhole, @PathVariable String amountDecimal, @PathVariable String reference) {
+        try {
+            Account account = accountRepository.findById(accountId).get();
+            Account counterpartyAccount = accountRepository.findById(counterpartyAccountId).get();
+            Amount amount = pairToAmount(amountWhole, amountDecimal);
+            return service.sendInternal(account, amount, reference, counterpartyAccount);
+        } catch (NoSuchElementException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account does not exist.", e);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Cannot process transaction.", e);
+        }
     }
 
-    @GetMapping("/getTransactions")
+    @GetMapping("/getAccounts/{userId}")
     @ResponseStatus(HttpStatus.OK)
-    public List<Account> getTransactions(Account account) {
-        return null;
+    public List<Account> getAccounts(@PathVariable Long userId) {
+        try {
+            // FUTURE Check that the userId corresponds to the (authorized) user
+
+            User user = userRepository.findById(userId).get();
+            return user.getAccounts();
+        } catch (NoSuchElementException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User does not exist.", e);
+        }
     }
 
-    @GetMapping("/getDailyBalances")
+    @GetMapping("/getTransactions/{accountId}")
     @ResponseStatus(HttpStatus.OK)
-    public List<DateBalance> getDailyBalances(Account account) {
-        return service.getDailyBalances(account);
+    public List<Transaction> getTransactions(@PathVariable Long accountId) {
+        try {
+            // FUTURE Check that the account belongs to the (authorized) user
+
+            Account account = accountRepository.findById(accountId).get();
+            return account.getTransactions();
+        } catch (NoSuchElementException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account does not exist.", e);
+        }
     }
+
+    @GetMapping("/getDailyBalances/{accountId}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<DateBalance> getDailyBalances(@PathVariable Long accountId) {
+        try {
+            Account account = accountRepository.findById(accountId).get();
+            return service.getDailyBalances(account);
+        } catch (NoSuchElementException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account does not exist.", e);
+        }
+    }
+
 }
