@@ -50,6 +50,10 @@ Run WalletControllerTest.
 
 ## Technical notes
 
+```
+docker compose -f docker/docker-compose.yml -p docker_wallet up -d db
+```
+
 ### Package
 
 ```
@@ -59,7 +63,37 @@ java -jar target/...
 
 ## Improvements
 
-- Business logic is implemented in the service. In enterprise systems, such logic involves many systems (security, AML,
-  core...)
 - Security
     - Currently, every user can do everything
+- Business logic is implemented in the service. In enterprise systems, such logic involves many systems (security, AML,
+  core...)
+- Database structure is automatically updated by hibernate. This is not a good practice for production.
+
+# To Do
+
+@Builder and data loader
+
+create CurrencyConversionService
+
+init load - fix amount, add users and CZK and EUR accounts
+DTO for passing objects
+
+frontend - thymeleaf
+
+- Better domain modelling. Current assumptions:
+  - Transaction currency is the same as source account.
+  -
+
+### Build the Project
+
+```
+mvn clean install
+```
+
+### Run the Project
+
+```
+mvn cargo:run
+```
+
+- note: starts on port '8082'

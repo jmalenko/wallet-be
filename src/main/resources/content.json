@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "name": "Adam",
+    "accounts": [
+      {
+        "id": 1,
+        "currency": "CZK",
+        "transactions": [
+          {
+            "id": 1,
+            "account_id": 1,
+            "from": null,
+            "to": 1,
+            "amount": 1000,
+            "reference": "First deposit to CZK account",
+            "created": 123456
+          },
+          {
+            "id": 2,
+            "account_id": 1,
+            "from": null,
+            "to": 1,
+            "amount": 100,
+            "reference": "First deposit to EUR account",
+            "created": 1234567
+          }
+        ]
+      }
+    ]
+  }
+]

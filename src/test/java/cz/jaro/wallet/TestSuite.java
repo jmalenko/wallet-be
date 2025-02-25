@@ -6,6 +6,6 @@ import org.junit.platform.suite.api.SuiteDisplayName;
 
 @Suite
 @SuiteDisplayName("All Tests Suite")
-@SelectPackages("cz.jaro.transaction")
+@SelectPackages("cz.jaro.wallet")
 public class TestSuite {
 }
