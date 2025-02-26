@@ -97,32 +97,6 @@ java -jar target/wallet-0.0.1-SNAPSHOT.jar
 - Database structure is automatically updated by hibernate. This is not a good practice for production.
 - Response JSONs have only the relevant data, but not in getUsers. This is for debugging. Accounts and transactions may
   be removed from the responses.
-
-# To Do
-
-@Builder and data loader
-
-create CurrencyConversionService
-
-init load - fix amount, add users and CZK and EUR accounts
-DTO for passing objects
-
-frontend - thymeleaf
-
-- Better domain modelling. Current assumptions:
-  - Transaction currency is the same as source account.
-  -
-
-### Build the Project
-
-```
-mvn clean install
-```
-
-### Run the Project
-
-```
-mvn cargo:run
-```
-
-- note: starts on port '8082'
+- Technical proposals:
+  - Refactor operations with amounts
+  - Refactor operations with currency
