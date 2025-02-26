@@ -67,7 +67,7 @@ public class WalletController {
         } catch (NoSuchElementException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account does not exist.", e);
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Cannot process transaction.", e);
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage(), e);
         }
     }
 
@@ -82,7 +82,7 @@ public class WalletController {
         } catch (NoSuchElementException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account does not exist.", e);
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Cannot process transaction.", e);
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, e.getMessage(), e);
         }
     }
 

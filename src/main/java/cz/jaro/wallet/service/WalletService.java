@@ -93,6 +93,9 @@ public class WalletService {
         if (!account.getCurrency().equals(counterpartyAccount.getCurrency()))
             throw new Exception("Account and counterparty account have different currencies.");
 
+        if (account.getId().equals(counterpartyAccount.getId()))
+            throw new Exception("Account and counterparty are the same.");
+
         Amount amountNegative = amountNegate(amount);
         Date created = new Date();
 
