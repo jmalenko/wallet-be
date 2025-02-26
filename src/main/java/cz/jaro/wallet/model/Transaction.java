@@ -1,6 +1,6 @@
 package cz.jaro.wallet.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,6 +10,7 @@ import java.util.Date;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "transaction_type", discriminatorType = DiscriminatorType.STRING)
+@JsonIgnoreProperties("account")
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,7 +18,7 @@ import java.util.Date;
 @Setter
 @EqualsAndHashCode
 @ToString
-public class Transaction {
+public class Transaction implements Comparable<Transaction> {
 
     @Id
     @GeneratedValue
@@ -27,7 +28,7 @@ public class Transaction {
     @JoinColumn(name = "account_id")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @JsonBackReference
+    @JsonIgnoreProperties("account_id")
     private Account account;
 
     @Embedded
@@ -38,4 +39,8 @@ public class Transaction {
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
 
+    @Override
+    public int compareTo(Transaction t2) {
+        return created.compareTo(t2.getCreated());
+    }
 }

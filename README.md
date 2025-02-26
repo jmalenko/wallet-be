@@ -95,6 +95,8 @@ java -jar target/wallet-0.0.1-SNAPSHOT.jar
 - Business logic is implemented in the service. In enterprise systems, such logic involves many systems (security, AML,
   core...)
 - Database structure is automatically updated by hibernate. This is not a good practice for production.
+- Response JSONs have only the relevant data, but not in getUsers. This is for debugging. Accounts and transactions may
+  be removed from the responses.
 
 # To Do
 

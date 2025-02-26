@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/wallet")
 public class WalletController {
 
@@ -108,6 +109,18 @@ public class WalletController {
             List<Transaction> transactions = account.getTransactions();
             transactions.sort(WalletService.Comparators.CREATED);
             return transactions;
+        } catch (NoSuchElementException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account does not exist.", e);
+        }
+    }
+
+    @GetMapping("/getAccountInfo/{accountId}")
+    @ResponseStatus(HttpStatus.OK)
+    public AccountInfo getAccountInfo(@PathVariable Long accountId) {
+        try {
+            Account account = accountRepository.findById(accountId).get();
+            Amount balance = service.getAccountBalance(account);
+            return new AccountInfo(account.getId().toString(), account.getCurrency(), balance);
         } catch (NoSuchElementException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account does not exist.", e);
         }
