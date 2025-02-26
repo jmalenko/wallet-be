@@ -100,3 +100,5 @@ java -jar target/wallet-0.0.1-SNAPSHOT.jar
 - Technical proposals:
   - Refactor operations with amounts
   - Refactor operations with currency
+  - Migrate from Date to LocalDateTime. This is ok, except in one situation: In the InitDataLoader, the past
+    transactions (which don't have date s now) have year bigger by 1900.  
