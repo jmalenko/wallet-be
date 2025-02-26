@@ -133,8 +133,10 @@ public class WalletService {
             }
         }
 
-        DateBalance dateBalance = new DateBalance(new Date(date.getYear(), date.getMonth(), date.getDay(), 0, 0, 0), new Amount(amount.getWhole(), amount.getDecimal()));
-        dailyBalances.add(dateBalance);
+        if (date != null) {
+            DateBalance dateBalance = new DateBalance(new Date(date.getYear(), date.getMonth(), date.getDay(), 0, 0, 0), new Amount(amount.getWhole(), amount.getDecimal()));
+            dailyBalances.add(dateBalance);
+        }
 
         return dailyBalances;
     }
