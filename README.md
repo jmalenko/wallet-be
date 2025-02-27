@@ -1,5 +1,13 @@
 # Overview
 
+## How to run
+
+```
+git clone https://github.com/jmalenko/wallet-fe.git
+git clone https://github.com/jmalenko/wallet-be.git
+docker compose -f wallet-be/docker/docker-compose.yml -p wallet up
+```
+
 ## Assignment
 
 Klientská peněženka
@@ -86,6 +94,29 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/x86_64-linux-gnu
 ```
 ./mvnw clean package
 java -jar target/wallet-0.0.1-SNAPSHOT.jar
+```
+
+### Docker
+
+```
+docker build -t wallet-be .
+docker run -p 8080:8080 wallet-be
+```
+
+### Docker compose
+
+```
+docker compose -f docker/docker-compose.yml -p wallet up
+```
+
+Refresh containers
+
+```
+docker compose -f docker/docker-compose.yml -p wallet down
+docker image list
+docker image rm -f wallet-ui
+docker image rm -f wallet-api
+docker compose -f docker/docker-compose.yml -p wallet up
 ```
 
 ## Improvements
