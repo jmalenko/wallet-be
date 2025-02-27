@@ -3,10 +3,12 @@
 ## How to run
 
 ```
-git clone https://github.com/jmalenko/wallet-fe.git
 git clone https://github.com/jmalenko/wallet-be.git
+git clone https://github.com/jmalenko/wallet-fe.git
 docker compose -f wallet-be/docker/docker-compose.yml -p wallet up
 ```
+
+Open http://localhost:8080/
 
 ## Assignment
 
@@ -66,7 +68,7 @@ Start database in docker.
 sudo mkdir -p /private/var/lib/postgresql
 sudo  chown -R jaro:jaro /private
 
-docker compose -f docker/docker-compose.yml -p docker_wallet up -d db
+docker compose -f docker/docker-compose.yml -p wallet up -d db
 ```
 
 In the dev profile (which is active), database structure is updated automatically based on the model.
