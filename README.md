@@ -3,8 +3,8 @@
 ## How to run
 
 ```
-git clone https://github.com/jmalenko/wallet-fe.git
 git clone https://github.com/jmalenko/wallet-be.git
+git clone https://github.com/jmalenko/wallet-fe.git
 docker compose -f wallet-be/docker/docker-compose.yml -p wallet up
 ```
 
