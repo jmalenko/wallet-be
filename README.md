@@ -62,7 +62,7 @@ Run WalletControllerTest.
 
 ### Database
 
-Start database in docker.
+For developement, start database in docker.
 
 ```
 sudo mkdir -p /private/var/lib/postgresql
@@ -131,7 +131,6 @@ docker compose -f docker/docker-compose.yml -p wallet up
 - Response JSONs have only the relevant data, but not in getUsers. This is for debugging. Accounts and transactions may
   be removed from the responses.
 - Technical proposals:
-  - Refactor operations with amounts
-  - Refactor operations with currency
-  - Migrate from Date to LocalDateTime. This is ok, except in one situation: In the InitDataLoader, the past
-    transactions (which don't have date s now) have year bigger by 1900.  
+    - Refactor operations with amounts
+    - Refactor operations with currency
+    - Migrate from Date to LocalDateTime. Date is obsolete, but works wit Postgresql..

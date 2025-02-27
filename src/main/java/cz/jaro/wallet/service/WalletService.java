@@ -124,20 +124,18 @@ public class WalletService {
                 date = transaction.getCreated();
                 amount = transaction.getAmount();
             } else {
-                if (isDateSame(date, transaction.getCreated())) {
-                    amount = amountAdd(amount, transaction.getAmount());
-                } else {
-                    DateBalance dateBalance = new DateBalance(new Date(date.getYear(), date.getMonth(), date.getDay(), 0, 0, 0), new Amount(amount.getWhole(), amount.getDecimal()));
+                if (!isDateSame(date, transaction.getCreated())) {
+                    DateBalance dateBalance = new DateBalance(date, new Amount(amount.getWhole(), amount.getDecimal()));
                     dailyBalances.add(dateBalance);
 
                     date = transaction.getCreated();
-                    amount = transaction.getAmount();
                 }
+                amount = amountAdd(amount, transaction.getAmount());
             }
         }
 
         if (date != null) {
-            DateBalance dateBalance = new DateBalance(new Date(date.getYear(), date.getMonth(), date.getDay(), 0, 0, 0), new Amount(amount.getWhole(), amount.getDecimal()));
+            DateBalance dateBalance = new DateBalance(date, new Amount(amount.getWhole(), amount.getDecimal()));
             dailyBalances.add(dateBalance);
         }
 

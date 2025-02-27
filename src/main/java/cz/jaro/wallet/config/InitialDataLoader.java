@@ -11,7 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import java.util.Calendar;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 
 /**
@@ -80,7 +81,9 @@ public class InitialDataLoader implements CommandLineRunner {
 
             for (int day = 1; day <= 20; day++) {
                 for (int count = 1; count <= day % 3; count++) {
-                    walletService.receiveExternal(account3, new Amount(Long.valueOf(day), Long.valueOf(count)), "Deposit", new Date(2030, Calendar.JANUARY, day, 2 + count, 0, 0), "DE123");
+                    LocalDateTime localDateTime = LocalDateTime.of(2020, 1, day, 5 + count, 0, 0);
+                    Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+                    walletService.receiveExternal(account3, new Amount(Long.valueOf(day), Long.valueOf(count)), "Deposit", date, "DE123");
                 }
             }
         }
