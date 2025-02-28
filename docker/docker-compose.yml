@@ -1,6 +1,10 @@
 services:
   ui:
-    build: ../../wallet-fe
+    build:
+      context: ../../wallet-fe
+      args:
+        # Note: this must match the URL in api (specifically port 8080 defined in this file and path defined in the apu REST controller)
+        - VITE_API_BASE_URL=http://localhost:8080/wallet/
     depends_on:
       - api
     ports:
