@@ -39,7 +39,12 @@ public class WalletService {
         user.addAccount(accountCZK);
         user.addAccount(accountEUR);
 
-        return userRepository.save(user);
+        User userSaved = userRepository.save(user);
+
+        // Update name to match id. This is not a good practice, but is useful for debugging.
+        userSaved.setName("Name" + userSaved.getId());
+
+        return userRepository.save(userSaved);
     }
 
     @Transactional
